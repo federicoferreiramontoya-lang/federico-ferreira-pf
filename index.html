@@ -57,7 +57,8 @@ h2{margin:7px 0 12px}.muted{color:var(--muted);font-size:13px;line-height:1.55}
     <form id="studentForm">
      <input type="hidden" id="studentId">
      <div class="field"><label for="name">Nombre y apellido *</label><input id="name" required placeholder="Nombre completo"></div>
-     <div class="field"><label for="goal">Objetivo de entrenamiento</label><input id="goal" placeholder="Ej. Fuerza general, rendimiento"></div>
+     <div class="field"><label for="goal">Objetivo de entrenamiento</label><input 
+                                                                            id="goal" placeholder="Ej. Fuerza general, rendimiento"></div>
      <div class="field"><label for="routine">Link de Google Sheets (rutina)</label><input id="routine" type="url" placeholder="https://docs.google.com/spreadsheets/..."></div>
      <div class="field"><label for="status">Estado</label><select id="status"><option value="activo">Activo</option><option value="pausa">En pausa</option><option value="archivado">Archivado</option></select></div>
      <button class="btn gold" type="submit" id="saveBtn">Guardar alumno</button>
@@ -118,7 +119,11 @@ function render() {
   $('adminList').innerHTML = shown.length ? shown.map(s => `
     <div class="item">
       <div><strong>${esc(s.nombre)}</strong><small>${esc(s.objetivo || 'Sin objetivo cargado')} · ${s.rutina_url ? 'Rutina enlazada' : 'Sin rutina'} · ${esc(s.estado || 'activo')}</small></div>
-      <div class="actions"><button data-edit="${s.id}">Editar</button>${s.estado !== 'archivado' ? `<button data-archive="${s.id}">Archivar</button>` : ''}</div>
+     <div class="actions">
+  <button data-edit="${s.id}">Editar</button>
+  ${s.rutina_url ? `<button onclick="window.open('${s.rutina_url}','_blank')">Ver rutina</button>` : ''}
+  ${s.estado !== 'archivado' ? `<button data-archive="${s.id}">Archivar</button>` : ''}
+</div>
     </div>`).join('') : '<div class="muted">No hay alumnos para mostrar.</div>';
 }
 async function loadStudents() {
@@ -190,7 +195,7 @@ $('adminList').addEventListener('click', async e => {
   if (edit) {
     const s = students.find(x => String(x.id) === String(edit));
     if (!s) return;
-    $('studentId').value = s.id;
+    studentId').value =
     $('name').value = s.nombre || '';
     $('goal').value = s.objetivo || '';
     $('routine').value = s.rutina_url || '';
